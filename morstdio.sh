@@ -7,8 +7,6 @@
 
 #todo: make a command and light feedback dictionary to make this easier
 
-#issues: may be an issue with inputting ": " being interpreted as a command
-
 # --- Settings ---
 pollrate=0.025
 
@@ -130,8 +128,7 @@ push_message(){ #add most recent code as ascii to message
 	char="$(to_ascii "$1")"
 	if [ ! "$caps" = "off" ]; then
 		char="$(echo "$char" | tr "[:lower:]" "[:upper:]")" #apply caps
-	elif [ "$caps" = "on" ]; then
-		caps="off" #turn off caps
+		test "$caps" = "on" && caps="off" #turn off caps
 	fi
 
 	if [ "$char" = "" ]; then   #error if invalid character
@@ -160,7 +157,7 @@ resolve_message() {
 		flash 3 0.06 0.06; flash 1 0.5 0.2; flash 3 0.06 0.06; flash 1 0.5 0
 		message=""
 
-	elif cmnd ": "; then #remove failed command (delete to most recent ":")
+	elif cmnd ":+ "; then #remove failed command (delete to most recent ":")
 		aflash 2 0.06 0.06
 		message="${message%?${message##*:}}" #remove characters up to the last :
 
