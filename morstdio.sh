@@ -123,6 +123,9 @@ push_message(){ #add most recent code as ascii to message
 			;;
 		esac
 		return 0
+	elif [ "$1" = "--.--" ]; then
+		#command feedback
+		aflash 3 0.06 0.06
 	fi
 
 	char="$(to_ascii "$1")"
@@ -139,7 +142,7 @@ push_message(){ #add most recent code as ascii to message
 	fi
 }
 resolve_message() {
-	
+
 	#check commands
 	if cmnd ":w "; then #enter message
 		transmit "- - -"
@@ -159,7 +162,7 @@ resolve_message() {
 
 	elif cmnd ":+ "; then #remove failed command (delete to most recent ":")
 		aflash 2 0.06 0.06
-		message="${message%?${message##*:}}" #remove characters up to the last :
+		message="${message${message##*:}}" #remove characters up to the last :
 
 
 	elif cmnd ":cp "; then #cut message
@@ -179,10 +182,12 @@ resolve_message() {
 	elif cmnd ":a "; then #repeat last word
 		atransmit ".-. .-." #"rr" roger roger
 		atransmit "$(morsify "${message##* }")"
+		flash 1 1 0.25; flash 2 0.06 0.06 #end of readout, ready for input
 
 	elif cmnd ":m "; then #repeat message
 		atransmit ".-. .-. ==" #"rr M"
 		atransmit "$(morsify "$message")"
+		flash 1 1 0.25; flash 2 0.06 0.06 #end of readout, ready for input
 
 	elif cmnd ":r "; then #repeat last stdout
 		transmit ".-. .-." #"rr -----"
@@ -190,6 +195,7 @@ resolve_message() {
 		await_input
 		echo "0" > "$LIGHT"
 		atransmit "$(morsify "$stdout")"
+		flash 1 1 0.25; flash 2 0.06 0.06 #end of readout, ready for input
 
 	elif cmnd ":c "; then #repeat last message (stdin)
 		transmit ".. -. .. -." #"inin -----"
@@ -197,6 +203,7 @@ resolve_message() {
 		await_input
 		echo "0" > "$LIGHT"
 		atransmit "$(morsify "$stdin")"
+		flash 1 1 0.25; flash 2 0.06 0.06 #end of readout, ready for input
 
 
 	elif cmnd ":q "; then #qrs last stdout (word by word, hold to exit early)
@@ -304,12 +311,12 @@ qrs() { #atransmit word-by-word. press button for next word. escape by holding b
 			if [ "$pressdur" -gt 2000 ]; then #exit qrs if held for over two seconds
 				flash 4 0.06 0.06 #not async
 				break 2
-			elif [ "$pressdur" -gt "$spacedur" ]; then #if held somewhat, repeat word
+			elif [ "$pressdur" -gt "$dashdur" ]; then #if held somewhat, repeat word
 				flash 1 0.7 0 #not async
 			else break; fi #otherwise go on to next word
 		done
 	done
-	transmit "_ _ _" #signal end
+	flash 1 1 0.25; flash 2 0.06 0.06 #end of readout, ready for input
 }
 
 # ---- Translation ----
