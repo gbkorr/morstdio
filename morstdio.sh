@@ -210,6 +210,10 @@ resolve_message() {
 		atransmit "==*=" #"Q"
 		qrs "$stdout"
 
+	elif cmnd ":qc "; then #qrs stdin
+		atransmit "==*= =*=*" #"Q M"
+		qrs "$stdin"
+
 	elif cmnd ":qm "; then #qrs message
 		atransmit "==*= ==" #"Q M"
 		qrs "$message"
@@ -403,8 +407,8 @@ $ ---.
 
 + ..-.. 
 * ...-. 
-^ .--.. 
-~ .-.-- 
+^ .--.- 
+~ .--.- 
 
 : --.-- 
 ; -.-.. 
