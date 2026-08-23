@@ -3,4 +3,5 @@ This is the repo for my [morse code i/o](https://gbkorr.github.io/r-bites/morstd
 
 It's made to run on a Luckfox Lyra board, but it should be easy to adapt to whatever else. In fact, I created it intending to adapt it in the future to make an input system using a flashlight and computer vision.
 
+morstdin.sh is a smaller generic script for inputting and executing morse.
 
